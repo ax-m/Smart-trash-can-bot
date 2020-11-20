@@ -22,10 +22,9 @@ public class FunnyGuyBot extends TelegramLongPollingBot {
         if (update.hasMessage()) {
             Message message = update.getMessage();
             if(message.hasText()) {
-                String text = message.getText().toLowerCase();
-                if(text.endsWith("ні") || text.endsWith("hi")) {
+                if(containsNo(message.getText())) {
                     SendMessage sendMessage = new SendMessage();
-                    sendMessage.setText("Hello");
+                    sendMessage.setText(getGreeting());
                     sendMessage.setChatId(message.getChatId() + "");
                     sendMessage.setReplyToMessageId(message.getMessageId());
                     try {
@@ -37,4 +36,24 @@ public class FunnyGuyBot extends TelegramLongPollingBot {
             }
         }
     }
+
+    private boolean containsNo(String text) {
+        text = text.toLowerCase();
+        text = text.replaceAll("[,.!?\\\\-]", "");
+        String[] words = text.split(" ");
+        for(int i = 0;i < words.length;i++) {
+            if(words[i].equals("hi") || words[i].equals("ні") || words[i].equals("hі") || words[i].equals("нi")) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private String getGreeting() {
+        String[] greetings = {"Hello", "Hi", "Привіт", "Здарова чмо", "Всем привет, с вами Навальный!",
+        "О, ви з Англії?", "org.telegram.telegrambots.meta.exceptions.TelegramApiRequestException: Error removing old webhook",
+        "..."};
+        return greetings[(int)(Math.random() * greetings.length)];
+    }
+
 }
